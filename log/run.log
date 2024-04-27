@@ -1,0 +1,35 @@
+2024-04-27 17:16:04.774 [main] [org.springframework.test.context.support.AnnotationConfigContextLoaderUtils] [83] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.example.socketdemo.TestLog]: TestLog does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-04-27 17:16:04.840 [main] [org.springframework.boot.test.context.SpringBootTestContextBootstrapper] [234] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.example.socketdemo.SocketDemoApplication for test class com.example.socketdemo.TestLog
+2024-04-27 17:16:05.063 [main] [org.springframework.boot.StartupInfoLogger] [50] INFO  com.example.socketdemo.TestLog - Starting TestLog using Java 17.0.9 with PID 9488 (started by ljx in E:\personal_java_projects\socket-demo-client)
+2024-04-27 17:16:05.064 [main] [org.springframework.boot.SpringApplication] [654] INFO  com.example.socketdemo.TestLog - No active profile set, falling back to 1 default profile: "default"
+2024-04-27 17:16:05.663 [main] [org.springframework.boot.StartupInfoLogger] [56] INFO  com.example.socketdemo.TestLog - Started TestLog in 0.729 seconds (process running for 1.226)
+2024-04-27 17:16:06.101 [main] [com.example.socketdemo.TestLog] [23] INFO  com.example.socketdemo.TestLog - info输出
+2024-04-27 17:16:06.102 [main] [com.example.socketdemo.TestLog] [24] WARN  com.example.socketdemo.TestLog - warn输出
+2024-04-27 17:16:06.102 [main] [com.example.socketdemo.TestLog] [25] ERROR com.example.socketdemo.TestLog - error输出
+2024-04-27 17:16:06.102 [main] [com.example.socketdemo.TestLog] [26] INFO  com.example.socketdemo.TestLog - false
+2024-04-27 17:16:06.102 [main] [com.example.socketdemo.TestLog] [27] INFO  com.example.socketdemo.TestLog - false
+2024-04-27 17:16:06.103 [main] [com.example.socketdemo.TestLog] [28] INFO  com.example.socketdemo.TestLog - true
+2024-04-27 17:16:06.103 [main] [com.example.socketdemo.TestLog] [29] INFO  com.example.socketdemo.TestLog - true
+2024-04-27 17:16:06.103 [main] [com.example.socketdemo.TestLog] [30] INFO  com.example.socketdemo.TestLog - true
+2024-04-27 17:18:19.181 [main] [com.example.socketdemo.test.ConnectCamera] [130] ERROR c.e.socketdemo.test.ConnectCamera - 无法连接111
+2024-04-27 17:18:19.185 [main] [com.example.socketdemo.test.ConnectCamera] [137] ERROR c.e.socketdemo.test.ConnectCamera - 睡眠1min之后尝试重连！
+2024-04-27 17:19:24.201 [main] [com.example.socketdemo.test.ConnectCamera] [130] ERROR c.e.socketdemo.test.ConnectCamera - 无法连接111
+2024-04-27 17:19:24.201 [main] [com.example.socketdemo.test.ConnectCamera] [137] ERROR c.e.socketdemo.test.ConnectCamera - 睡眠1min之后尝试重连！
+2024-04-27 17:20:29.222 [main] [com.example.socketdemo.test.ConnectCamera] [130] ERROR c.e.socketdemo.test.ConnectCamera - 无法连接111
+2024-04-27 17:20:29.224 [main] [com.example.socketdemo.test.ConnectCamera] [137] ERROR c.e.socketdemo.test.ConnectCamera - 睡眠1min之后尝试重连！
+2024-04-27 17:21:34.230 [main] [com.example.socketdemo.test.ConnectCamera] [130] ERROR c.e.socketdemo.test.ConnectCamera - 无法连接111
+2024-04-27 17:21:34.233 [main] [com.example.socketdemo.test.ConnectCamera] [137] ERROR c.e.socketdemo.test.ConnectCamera - 睡眠1min之后尝试重连！
+2024-04-27 17:22:39.242 [main] [com.example.socketdemo.test.ConnectCamera] [130] ERROR c.e.socketdemo.test.ConnectCamera - 无法连接111
+2024-04-27 17:22:39.245 [main] [com.example.socketdemo.test.ConnectCamera] [137] ERROR c.e.socketdemo.test.ConnectCamera - 睡眠1min之后尝试重连！
+2024-04-27 17:23:44.265 [main] [com.example.socketdemo.test.ConnectCamera] [130] ERROR c.e.socketdemo.test.ConnectCamera - 无法连接111
+2024-04-27 17:23:44.268 [main] [com.example.socketdemo.test.ConnectCamera] [137] ERROR c.e.socketdemo.test.ConnectCamera - 睡眠1min之后尝试重连！
+2024-04-27 17:24:49.274 [main] [com.example.socketdemo.test.ConnectCamera] [130] ERROR c.e.socketdemo.test.ConnectCamera - 无法连接111
+2024-04-27 17:24:49.275 [main] [com.example.socketdemo.test.ConnectCamera] [137] ERROR c.e.socketdemo.test.ConnectCamera - 睡眠1min之后尝试重连！
+2024-04-27 17:25:54.287 [main] [com.example.socketdemo.test.ConnectCamera] [130] ERROR c.e.socketdemo.test.ConnectCamera - 无法连接111
+2024-04-27 17:25:54.290 [main] [com.example.socketdemo.test.ConnectCamera] [137] ERROR c.e.socketdemo.test.ConnectCamera - 睡眠1min之后尝试重连！
+2024-04-27 17:26:59.303 [main] [com.example.socketdemo.test.ConnectCamera] [130] ERROR c.e.socketdemo.test.ConnectCamera - 无法连接111
+2024-04-27 17:26:59.306 [main] [com.example.socketdemo.test.ConnectCamera] [137] ERROR c.e.socketdemo.test.ConnectCamera - 睡眠1min之后尝试重连！
+2024-04-27 17:28:04.323 [main] [com.example.socketdemo.test.ConnectCamera] [130] ERROR c.e.socketdemo.test.ConnectCamera - 无法连接111
+2024-04-27 17:28:04.326 [main] [com.example.socketdemo.test.ConnectCamera] [137] ERROR c.e.socketdemo.test.ConnectCamera - 睡眠1min之后尝试重连！
+2024-04-27 17:30:14.976 [main] [com.example.socketdemo.test.ConnectCamera] [130] ERROR - 无法连接111
+2024-04-27 17:30:14.978 [main] [com.example.socketdemo.test.ConnectCamera] [137] ERROR - 睡眠1min之后尝试重连！
