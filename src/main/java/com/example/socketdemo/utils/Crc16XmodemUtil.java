@@ -1,6 +1,6 @@
-package com.example.socketdemo.test;
+package com.example.socketdemo.utils;
 
-public class Crc16Xmodem {
+public class Crc16XmodemUtil {
     /**
      * CRC16-XMODEM算法（四字节）
      *

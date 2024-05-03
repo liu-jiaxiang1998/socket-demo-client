@@ -1,5 +1,7 @@
 package com.example.socketdemo.test;
 
+import com.example.socketdemo.utils.CrcUtil;
+import com.example.socketdemo.utils.HexUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.DecoderException;
 
@@ -20,9 +22,9 @@ import java.nio.file.Paths;
  * @date 2024/4/25
  */
 @Slf4j
-public class ConnectCamera {
+public class ConnectCameraTest {
     public static void main(String[] args) {
-        
+
         String serverIp = "10.70.123.220";
         int serverPort = 6668;
 //        String tempData = "02 00 33 04 00 01 11 01 7F 39 03";

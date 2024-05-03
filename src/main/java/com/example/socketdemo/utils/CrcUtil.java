@@ -1,11 +1,11 @@
-package com.example.socketdemo.test;
+package com.example.socketdemo.utils;
 
 
 public class CrcUtil {
     public static String crcXmodem(String xuhao, String chedaohao) {
         String raw = "00 33 04 " + xuhao + " " + chedaohao + " 01";
         byte[] bytes = hexStringToByteArray(raw);
-        int crcValue = Crc16Xmodem.crc16_ccitt_xmodem(bytes, 0, bytes.length);
+        int crcValue = Crc16XmodemUtil.crc16_ccitt_xmodem(bytes, 0, bytes.length);
         String crc = String.format("%04X", crcValue);
         crc = crc.substring(0, 2) + " " + crc.substring(2, 4);
         return "02 00 33 04" + " " + xuhao + " " + chedaohao + " 01 " + crc + " 03";

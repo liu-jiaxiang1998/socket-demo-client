@@ -1,4 +1,4 @@
-package com.example.socketdemo.test;
+package com.example.socketdemo.utils;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;

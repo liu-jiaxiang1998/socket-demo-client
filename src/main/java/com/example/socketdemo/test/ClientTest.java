@@ -1,4 +1,4 @@
-package com.example.socketdemo.service;
+package com.example.socketdemo.test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,10 +8,10 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-public class Client implements Runnable {
+public class ClientTest implements Runnable {
     private final String threadName;
 
-    public Client(String threadName) {
+    public ClientTest(String threadName) {
         this.threadName = threadName;
     }
 
