@@ -1,0 +1,12 @@
+2024-05-03 16:45:54.370 [main] [com.example.socketdemo.test.Java2PythonTest] [23] INFO  - Received from client: Hello, from Python!
+2024-05-03 16:48:27.415 [main] [com.example.socketdemo.test.Java2PythonTest] [23] INFO  - Received from client: Hello, from Python!你好！！
+2024-05-03 16:48:48.655 [main] [com.example.socketdemo.test.Java2PythonTest] [23] INFO  - Received from client: Hello, from Python!你好！！
+2024-05-03 16:48:49.835 [main] [com.example.socketdemo.test.Java2PythonTest] [23] INFO  - Received from client: Hello, from Python!你好！！
+2024-05-03 16:50:26.795 [main] [com.example.socketdemo.test.Java2PythonTest] [23] INFO  - Received from client: Hello, from Python!你好！！
+2024-05-03 16:50:27.968 [main] [com.example.socketdemo.test.Java2PythonTest] [23] INFO  - Received from client: Hello, from Python!你好！！
+2024-05-03 16:50:28.574 [main] [com.example.socketdemo.test.Java2PythonTest] [23] INFO  - Received from client: Hello, from Python!你好！！
+2024-05-03 16:50:29.067 [main] [com.example.socketdemo.test.Java2PythonTest] [23] INFO  - Received from client: Hello, from Python!你好！！
+2024-05-03 16:50:29.614 [main] [com.example.socketdemo.test.Java2PythonTest] [23] INFO  - Received from client: Hello, from Python!你好！！
+2024-05-03 16:50:30.248 [main] [com.example.socketdemo.test.Java2PythonTest] [23] INFO  - Received from client: Hello, from Python!你好！！
+2024-05-03 16:55:05.668 [main] [com.example.socketdemo.test.Java2PythonTest] [25] INFO  - Received from client: [-1, 123, 456, 789]
+2024-05-03 16:56:53.903 [main] [com.example.socketdemo.test.Java2PythonTest] [25] INFO  - Received from client: [-1, 123, 456, 789]

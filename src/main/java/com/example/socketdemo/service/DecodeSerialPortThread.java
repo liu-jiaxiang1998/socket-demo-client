@@ -1,13 +1,13 @@
 package com.example.socketdemo.service;
 
 import cn.hutool.core.util.ArrayUtil;
+import com.example.socketdemo.communicate.InfraredSocket;
 import com.example.socketdemo.entity.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 @Slf4j
 public class DecodeSerialPortThread implements Runnable {
@@ -23,6 +23,9 @@ public class DecodeSerialPortThread implements Runnable {
 
     private ConcurrentHashMap<Integer, CameraCaptureResult> cameraCaptureResultMap;
 
+    private ConcurrentHashMap<Integer, String> infraredCaptureResultMap;
+
+    ExecutorService executorService = Executors.newFixedThreadPool(5);
     public DecodeSerialPortThread(BlockingQueue<Byte> serialPortDataQueue, BlockingQueue<CameraCaptureCommand> cameraCaptureCommandQueue, BlockingQueue<ToGKJMessage> toGKJMessagesQueue, ConcurrentHashMap<Integer, CameraCaptureResult> cameraCaptureResultMap) {
         this.serialPortDataQueue = serialPortDataQueue;
         this.cameraCaptureCommandQueue = cameraCaptureCommandQueue;
@@ -85,6 +88,19 @@ public class DecodeSerialPortThread implements Runnable {
                                     cameraCaptureCommand.setId(uuid);
                                     cameraCaptureCommand.setLane(lane == 2 ? 12 : 11);
                                     this.cameraCaptureCommandQueue.put(cameraCaptureCommand);
+
+                                    Callable<String> infraredSocket = new InfraredSocket();
+                                    CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+                                        try {
+                                            return infraredSocket.call();
+                                        } catch (Exception e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }, executorService);
+                                    completableFuture.thenAccept(result -> {
+                                        log.info("红外相机抓拍成功！");
+                                        infraredCaptureResultMap.put(uuid, result);
+                                    });
 
                                     ToGKJMessage toGKJMessage = new ToGKJMessage();
                                     toGKJMessage.setType(ToGKJMessageType.CAPTURE_FRAME);

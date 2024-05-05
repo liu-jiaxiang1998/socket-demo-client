@@ -91,7 +91,7 @@ public class CameraSocket implements Runnable {
 
     class ReceiveThread extends Thread {
         private Socket socket;
-        private BlockingQueue<CameraCaptureResult> cameraCaptureResultQueue;
+        private ConcurrentHashMap<Integer, CameraCaptureResult> cameraCaptureResultMap;
         private Logger logger;
 
         ReceiveThread(Socket socket) {
@@ -164,7 +164,7 @@ public class CameraSocket implements Runnable {
                     cameraCaptureResult.setSpeed(0f);
                     cameraCaptureResult.setLaneNumber(laneNumber);
                     cameraCaptureResult.setIsCompleted(true);
-                    cameraCaptureResultQueue.put(cameraCaptureResult);
+                    cameraCaptureResultMap.put(uuid,cameraCaptureResult);
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }
