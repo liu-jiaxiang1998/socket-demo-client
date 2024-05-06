@@ -16,16 +16,13 @@ public class DecodeSerialPortThread implements Runnable {
     private static final String END_STR = "fe"; // 终止标志
 
     private static Integer cur_batch = 0;
-
+    ExecutorService executorService = Executors.newFixedThreadPool(5);
     private BlockingQueue<Byte> serialPortDataQueue;
     private BlockingQueue<CameraCaptureCommand> cameraCaptureCommandQueue;
     private BlockingQueue<ToGKJMessage> toGKJMessagesQueue;
-
     private ConcurrentHashMap<Integer, CameraCaptureResult> cameraCaptureResultMap;
-
     private ConcurrentHashMap<Integer, String> infraredCaptureResultMap;
 
-    ExecutorService executorService = Executors.newFixedThreadPool(5);
     public DecodeSerialPortThread(BlockingQueue<Byte> serialPortDataQueue, BlockingQueue<CameraCaptureCommand> cameraCaptureCommandQueue, BlockingQueue<ToGKJMessage> toGKJMessagesQueue, ConcurrentHashMap<Integer, CameraCaptureResult> cameraCaptureResultMap) {
         this.serialPortDataQueue = serialPortDataQueue;
         this.cameraCaptureCommandQueue = cameraCaptureCommandQueue;

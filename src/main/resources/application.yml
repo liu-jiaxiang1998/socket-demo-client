@@ -4,3 +4,9 @@ spring:
 
 logging:
   config: classpath:logback.xml
+
+project:
+  capturePath:
+    root: capture
+    camera_ce: ce
+    infrared: infrared

@@ -2,6 +2,7 @@ package com.example.socketdemo.communicate;
 
 import com.example.socketdemo.entity.CameraCaptureCommand;
 import com.example.socketdemo.entity.CameraCaptureResult;
+import com.example.socketdemo.utils.CommonUtil;
 import com.example.socketdemo.utils.CrcUtil;
 import com.example.socketdemo.utils.HexUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -135,36 +136,34 @@ public class CameraSocket implements Runnable {
                     int millisecond = Integer.parseInt(data1.substring(32, 36), 16);
                     logger.info("检测编号" + uuid + "    检测时间：" + year + "年" + yue + "月" + ri + "日" + shi + "点" + fen + "分" + second + "秒" + millisecond + "毫秒");
                     int laneNumber = Integer.parseInt(data1.substring(36, 38), 16);
-//            int shibie = Integer.parseInt(data1.substring(38, 40), 16);
+                    int shibie = Integer.parseInt(data1.substring(38, 40), 16);
                     String color = new String(Base64.getDecoder().decode(data1.substring(40, 46)), StandardCharsets.UTF_8);
                     String licencePlate = data1.substring(46, 78);
-//            int tuxianggeshu = Integer.parseInt(data1.substring(78, 80), 16);
+                    int tuxianggeshu = Integer.parseInt(data1.substring(78, 80), 16);
 
                     int index = 80;
-                    String dirName = "captureImgTmpDir";
-                    if (!Files.isDirectory(Paths.get(dirName))) Files.createDirectories(Paths.get(dirName));
                     int imgBytesLength = Integer.parseInt(data1.substring(index, index + 8), 16) * 2;
                     byte[] imgBytes = HexUtil.hexStringToByteArray(data1.substring(index + 8, index + 8 + imgBytesLength));
-                    String pictureName = year + "_" + yue + "_" + ri + "_" + shi + "_" + fen + "_" + second + "_" + millisecond + "_" + laneNumber + ".jpg";
-                    Path filePath = Paths.get(dirName, pictureName);
+//                    String dirName = "captureImgTmpDir";
+//                    if (!Files.isDirectory(Paths.get(dirName))) Files.createDirectories(Paths.get(dirName));
+//                    String pictureName = year + "_" + yue + "_" + ri + "_" + shi + "_" + fen + "_" + second + "_" + millisecond + "_" + laneNumber + ".jpg";
+//                    Path filePath = Paths.get(dirName, pictureName);
+                    Path filePath = Paths.get(CommonUtil.getCameraImagePath());
                     Files.write(filePath, imgBytes);
-
                     long endTime = System.currentTimeMillis();
                     logger.info("抓拍耗时：" + (endTime - startTime) + "ms");
 
                     CameraCaptureResult cameraCaptureResult = cameraCaptureResultMap.get(uuid);
-                    if (cameraCaptureResult.getUuid() != uuid) {
-                        throw new Exception("未获取到在过车帧里构建的cameraCaptureResult！舍弃本条记录！");
-                    }
+                    if (cameraCaptureResult.getUuid() != uuid) throw new Exception("未获取到在过车帧里构建的cameraCaptureResult！舍弃本条记录！");
                     cameraCaptureResult.setLeftImgPath(filePath.toAbsolutePath().toString());
                     cameraCaptureResult.setRightImgPath(filePath.toAbsolutePath().toString());
-                    cameraCaptureResult.setImgName(pictureName);
+                    cameraCaptureResult.setImgName(filePath.getFileName().toString());
                     cameraCaptureResult.setLicencePlate(licencePlate);
                     cameraCaptureResult.setColor(color);
                     cameraCaptureResult.setSpeed(0f);
                     cameraCaptureResult.setLaneNumber(laneNumber);
                     cameraCaptureResult.setIsCompleted(true);
-                    cameraCaptureResultMap.put(uuid,cameraCaptureResult);
+                    cameraCaptureResultMap.put(uuid, cameraCaptureResult);
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }
