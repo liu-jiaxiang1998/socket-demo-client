@@ -1,5 +1,2 @@
 # socket-demo-client
-client 介绍！
-IDEA操作！！
-
-IDEA再次操作!!
+笔记本上的修改！！
