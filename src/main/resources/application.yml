@@ -6,7 +6,25 @@ logging:
   config: classpath:logback.xml
 
 project:
-  capturePath:
-    root: capture
-    camera_ce: ce
-    infrared: infrared
+  local:
+    listenPort: 8999
+    capturePath:
+      root: capture
+      ceCamera: ce
+      infrared: infrared
+  ceCamera:
+    ip: 10.70.123.221
+    port: 6668
+  remote:
+    ip: 10.70.123.224
+    communicatePort: 9999
+    username: zm
+    password: 1
+    ftpPath: F:\
+    capturePath:
+      root: picture
+      ce: ce
+      ceHW: ce_hw
+      crop: cropimg
+      head: headimg
+      allCE: all_ce

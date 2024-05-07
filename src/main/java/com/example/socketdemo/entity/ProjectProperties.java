@@ -8,17 +8,54 @@ import java.util.Map;
 
 @Slf4j
 public class ProjectProperties {
-    public static String CAPTURE_ROOT_PATH;
-    public static String CAMERA_PATH;
-    public static String INFRARED_PATH;
+    public static String LOCAL_LISTEN_PORT;
+    public static String LOCAL_CAPTURE_ROOT_PATH;
+    public static String LOCAL_CAMERA_PATH;
+    public static String LOCAL_INFRARED_PATH;
+
+    public static String CE_CAMERA_IP;
+    public static String CE_CAMERA_PORT;
+
+    public static String REMOTE_CAPTURE_ROOT_PATH;
+    public static String REMOTE_CE_PATH;
+    public static String REMOTE_CE_HW_PATH;
+    public static String REMOTE_CROP_PATH;
+    public static String REMOTE_HEAD_PATH;
+    public static String REMOTE_ALL_CE_PATH;
+
+    public static String REMOTE_FTP_PATH;
+
+    public static String REMOTE_IP;
+    public static String REMOTE_COMMUNICATE_PORT;
+    public static String REMOTE_USERNAME;
+    public static String REMOTE_PASSWORD;
 
     static {
         Yaml yaml = new Yaml();
         try (InputStream inputStream = ProjectProperties.class.getClassLoader().getResourceAsStream("application.yml")) {
             Map<String, Object> jsonData = yaml.load(inputStream);
-            CAPTURE_ROOT_PATH = getProperty(jsonData, "project.capturePath.root");
-            CAMERA_PATH = getProperty(jsonData, "project.capturePath.camera_ce");
-            INFRARED_PATH = getProperty(jsonData, "project.capturePath.infrared");
+            LOCAL_LISTEN_PORT = getProperty(jsonData, "project.local.listenPort");
+            LOCAL_CAPTURE_ROOT_PATH = getProperty(jsonData, "project.local.capturePath.root");
+            LOCAL_CAMERA_PATH = getProperty(jsonData, "project.local.capturePath.ceCamera");
+            LOCAL_INFRARED_PATH = getProperty(jsonData, "project.local.capturePath.infrared");
+
+            CE_CAMERA_IP = getProperty(jsonData, "project.ceCamera.ip");
+            CE_CAMERA_PORT = getProperty(jsonData, "project.ceCamera.port");
+
+            REMOTE_CAPTURE_ROOT_PATH = getProperty(jsonData, "project.remote.capturePath.root");
+            REMOTE_CE_PATH = getProperty(jsonData, "project.remote.capturePath.ce");
+            REMOTE_CE_HW_PATH = getProperty(jsonData, "project.remote.capturePath.ceHW");
+            REMOTE_CROP_PATH = getProperty(jsonData, "project.remote.capturePath.crop");
+            REMOTE_HEAD_PATH = getProperty(jsonData, "project.remote.capturePath.head");
+            REMOTE_ALL_CE_PATH = getProperty(jsonData, "project.remote.capturePath.allCE");
+
+            REMOTE_FTP_PATH = getProperty(jsonData, "project.remote.ftpPath");
+
+            REMOTE_IP = getProperty(jsonData, "project.remote.ip");
+            REMOTE_COMMUNICATE_PORT = getProperty(jsonData, "project.remote.communicatePort");
+            REMOTE_USERNAME = getProperty(jsonData, "project.remote.username");
+            REMOTE_PASSWORD = getProperty(jsonData, "project.remote.password");
+
             log.info("项目初始属性加载完毕");
         } catch (Exception e) {
             log.error("项目初始属性加载出错！" + e.getMessage());

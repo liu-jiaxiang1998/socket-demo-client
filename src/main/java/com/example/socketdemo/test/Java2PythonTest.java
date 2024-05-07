@@ -7,30 +7,15 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class Java2PythonTest {
-
+    /**
+     * 测试完成，可以正常通信！！
+     * date: 2024/5/6
+     * author: ljx
+     */
     public static void main(String[] args) throws IOException {
-        /**
-        * 测试完成，可以正常通信！！
-        * date: 2024/5/6
-        * author: ljx
-        */
-        CameraCaptureResult result = new CameraCaptureResult();
-        result.setUuid(123456);
-        result.setLeftImgPath("/path/to/left/image.jpg");
-        result.setRightImgPath("/path/to/right/image.jpg");
-        result.setLane(1);
-        result.setLaneNumber(2);
-        result.setDirection(0);
-        result.setImgName("capture_image");
-        result.setLicencePlate("ABC123");
-        result.setColor("blue");
-        result.setSpeed(60.5f);
-        result.setIsCompleted(true);
-
         int port = 8999;
         ServerSocket serverSocket = new ServerSocket(port);
         System.out.println("Server is listening on port " + port);
@@ -38,12 +23,20 @@ public class Java2PythonTest {
             try (Socket socket = serverSocket.accept()) {
                 System.out.println("New client connected: " + socket);
 
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
-                Object[] array = {1, "2", "dsasdsa", "你好", "E:/aaa"};
+                CameraCaptureResult result = new CameraCaptureResult();
+                result.setUuid(123456);
+                result.setLeftImgPath("/path/to/left/image.jpg");
+                result.setRightImgPath("/path/to/right/image.jpg");
+                result.setLane(1);
+                result.setLaneNumber(2);
+                result.setDirection(0);
+                result.setImgName("capture_image");
+                result.setLicencePlate("ABC123");
+                result.setColor("blue");
+                result.setSpeed(60.5f);
+                result.setIsCompleted(true);
 
-                // 将数组转换为 JSON 字符串
                 ObjectMapper objectMapper = new ObjectMapper();
-//                String json = objectMapper.writeValueAsString(array);
                 String json = objectMapper.writeValueAsString(result);
 
                 // 发送 JSON 字符串给 Python 程序
@@ -63,9 +56,17 @@ public class Java2PythonTest {
 //                    while ((receivedData = in.readLine()) != null) {
 //                        log.info("收到数据：" + receivedData);
 //                    }
-                    log.info("收到数据：" + in.readLine());
-                    // 2024-05-06 18:16:58.428 [main] INFO  - 收到数据：[-1, 123456, "capture_image", 1, 0, 0, 0, 0, 0, 0]
+//                    String receivedData = in.readLine();
 
+                    String receivedData = "[-1, 123456, \"capture_image\", 1, 0, 0, 0, 0, 0, 0]";
+                    log.info("收到数据：" + receivedData);
+                    ObjectMapper mapper = new ObjectMapper();
+                    Object[] arrays = objectMapper.readValue(receivedData, Object[].class);
+                    for (Object item : arrays) {
+                        System.out.println(item);
+                    }
+
+                    // 2024-05-06 18:16:58.428 [main] INFO  - 收到数据：[-1, 123456, "capture_image", 1, 0, 0, 0, 0, 0, 0]
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -78,8 +79,7 @@ public class Java2PythonTest {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                ////                    writer.write("Received from client: " + message);
-////                    writer.flush();
+
 //                String line;
 //                StringBuilder data = new StringBuilder();
 //                while ((line = reader.readLine()) != null) {

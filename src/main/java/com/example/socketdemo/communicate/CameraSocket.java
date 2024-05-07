@@ -2,6 +2,7 @@ package com.example.socketdemo.communicate;
 
 import com.example.socketdemo.entity.CameraCaptureCommand;
 import com.example.socketdemo.entity.CameraCaptureResult;
+import com.example.socketdemo.entity.PassingFrame;
 import com.example.socketdemo.utils.CommonUtil;
 import com.example.socketdemo.utils.CrcUtil;
 import com.example.socketdemo.utils.HexUtil;
@@ -22,28 +23,32 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class CameraSocket implements Runnable {
-    private String serverAddress;
-    private int serverPort;
+    private String cameraAddress;
+    private int cameraPort;
 
     private BlockingQueue<CameraCaptureCommand> cameraCaptureCommandQueue;
-    private ConcurrentHashMap<Integer, CameraCaptureResult> cameraCaptureResultMap;
+    private ConcurrentHashMap<Integer, PassingFrame> passingFrameMap;
+    private BlockingQueue<CameraCaptureResult> cameraCaptureResultQueue;
 
-    public CameraSocket(String serverAddress, int serverPort, BlockingQueue<CameraCaptureCommand> commandQueue, ConcurrentHashMap<Integer, CameraCaptureResult> cameraCaptureResultMap) {
-        this.serverAddress = serverAddress;
-        this.serverPort = serverPort;
+    public CameraSocket(String cameraAddress, int cameraPort, BlockingQueue<CameraCaptureCommand> commandQueue,
+                        ConcurrentHashMap<Integer, PassingFrame> passingFrameMap, BlockingQueue<CameraCaptureResult> cameraCaptureResultQueue) {
+        this.cameraAddress = cameraAddress;
+        this.cameraPort = cameraPort;
+
         this.cameraCaptureCommandQueue = commandQueue;
-        this.cameraCaptureResultMap = cameraCaptureResultMap;
+        this.passingFrameMap = passingFrameMap;
+        this.cameraCaptureResultQueue = cameraCaptureResultQueue;
     }
 
     @Override
     public void run() {
         while (true) {
             try {
-                Socket socket = new Socket(serverAddress, serverPort);
-                socket.setSoTimeout(5000);
+                Socket socket = new Socket(cameraAddress, cameraPort);
+//                socket.setSoTimeout(5000);
 
                 SendThread sendThread = new SendThread(socket, cameraCaptureCommandQueue);
-                ReceiveThread receiveThread = new ReceiveThread(socket);
+                ReceiveThread receiveThread = new ReceiveThread(socket, passingFrameMap, cameraCaptureResultQueue);
                 sendThread.start();
                 receiveThread.start();
 
@@ -92,11 +97,14 @@ public class CameraSocket implements Runnable {
 
     class ReceiveThread extends Thread {
         private Socket socket;
-        private ConcurrentHashMap<Integer, CameraCaptureResult> cameraCaptureResultMap;
+        private ConcurrentHashMap<Integer, PassingFrame> passingFrameMap;
+        private BlockingQueue<CameraCaptureResult> cameraCaptureResultQueue;
         private Logger logger;
 
-        ReceiveThread(Socket socket) {
+        ReceiveThread(Socket socket, ConcurrentHashMap<Integer, PassingFrame> passingFrameMap, BlockingQueue<CameraCaptureResult> cameraCaptureResultQueue) {
             this.socket = socket;
+            this.passingFrameMap = passingFrameMap;
+            this.cameraCaptureResultQueue = cameraCaptureResultQueue;
             logger = LoggerFactory.getLogger(ReceiveThread.class);
         }
 
@@ -153,8 +161,15 @@ public class CameraSocket implements Runnable {
                     long endTime = System.currentTimeMillis();
                     logger.info("抓拍耗时：" + (endTime - startTime) + "ms");
 
-                    CameraCaptureResult cameraCaptureResult = cameraCaptureResultMap.get(uuid);
-                    if (cameraCaptureResult.getUuid() != uuid) throw new Exception("未获取到在过车帧里构建的cameraCaptureResult！舍弃本条记录！");
+                    PassingFrame passingFrame = passingFrameMap.remove(uuid);
+                    if (passingFrame == null || passingFrame.getUuid() != uuid)
+                        throw new Exception("未获取到在过车帧里构建的cameraCaptureResult！舍弃本条记录！");
+                    CameraCaptureResult cameraCaptureResult = new CameraCaptureResult();
+
+                    cameraCaptureResult.setUuid(uuid);
+                    cameraCaptureResult.setLane(passingFrame.getLane());
+                    cameraCaptureResult.setDirection(passingFrame.getDirection());
+
                     cameraCaptureResult.setLeftImgPath(filePath.toAbsolutePath().toString());
                     cameraCaptureResult.setRightImgPath(filePath.toAbsolutePath().toString());
                     cameraCaptureResult.setImgName(filePath.getFileName().toString());
@@ -163,7 +178,7 @@ public class CameraSocket implements Runnable {
                     cameraCaptureResult.setSpeed(0f);
                     cameraCaptureResult.setLaneNumber(laneNumber);
                     cameraCaptureResult.setIsCompleted(true);
-                    cameraCaptureResultMap.put(uuid, cameraCaptureResult);
+                    cameraCaptureResultQueue.put(cameraCaptureResult);
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }
