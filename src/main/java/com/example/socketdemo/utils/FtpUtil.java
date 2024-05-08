@@ -15,7 +15,7 @@ public class FtpUtil {
     private static Ftp ftp;
 
     public static Boolean connect() {
-        ftp = new Ftp(ProjectProperties.REMOTE_IP, 21, ProjectProperties.REMOTE_USERNAME, ProjectProperties.REMOTE_PASSWORD, CharsetUtil.CHARSET_UTF_8);
+        ftp = new Ftp(ProjectProperties.REMOTE_IP, 21, ProjectProperties.REMOTE_USERNAME, ProjectProperties.REMOTE_PASSWORD.toString(), CharsetUtil.CHARSET_UTF_8);
         return isConnected();
     }
 

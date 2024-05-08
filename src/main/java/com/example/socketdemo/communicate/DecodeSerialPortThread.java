@@ -2,6 +2,7 @@ package com.example.socketdemo.communicate;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.example.socketdemo.entity.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.ByteBuffer;
@@ -11,11 +12,11 @@ import java.util.concurrent.*;
 @Slf4j
 public class DecodeSerialPortThread implements Runnable {
 
-    private static final String START_STR = "ff"; // 起始标志
-    private static final String END_STR = "fe"; // 终止标志
+    private static final String START_STR = "FF"; // 起始标志
+    private static final String END_STR = "FE"; // 终止标志
 
     private static Integer cur_batch = 0;
-    ExecutorService executorService = Executors.newFixedThreadPool(5);
+    private ExecutorService executorService = Executors.newFixedThreadPool(5);
     private BlockingQueue<Byte> serialPortDataQueue;
     private BlockingQueue<CameraCaptureCommand> cameraCaptureCommandQueue;
     private BlockingQueue<ToGKJMessage> toGKJMessagesQueue;
@@ -38,13 +39,13 @@ public class DecodeSerialPortThread implements Runnable {
             try {
                 while (true) {
                     Byte start = serialPortDataQueue.take();
-                    if (String.format("%02", start).equals(START_STR)) {
+                    if (String.format("%02X", start).equals(START_STR)) {
                         Byte commandCode = serialPortDataQueue.take();
-                        while (String.format("%02", commandCode).equals(START_STR)) {
+                        while (String.format("%02X", commandCode).equals(START_STR)) {
                             commandCode = serialPortDataQueue.take();
                         }
 
-                        if (commandCode != 2 || commandCode != 5) {
+                        if (commandCode.intValue() != 2 && commandCode.intValue() != 5) {
                             log.error("命令码不正确，接收下一条命令！");
                             break;
                         }
@@ -57,12 +58,17 @@ public class DecodeSerialPortThread implements Runnable {
                         serialPortDataQueue.take();
                         serialPortDataQueue.take();
 
+                        ObjectMapper objectMapper = new ObjectMapper();
+
                         if (commandCode == 2) {
-                            log.info("过车帧数据内容为：" + content);
+                            StringBuilder sb = new StringBuilder();
+                            for (byte b : content) sb.append(String.format("%02x", b));
+                            log.info("过车帧数据内容为：" + sb);
+
                             int lane = content[0] - 1;
-                            int number = content[1];
-                            int direction = content[2];
-                            int in_out = content[3];
+                            int number = content[1] & 0xFF;
+                            int direction = content[2] & 0xFF;
+                            int in_out = content[3] & 0xFF;
                             log.info("\n*过车序号：%d\n*车道：%d\n*方向：%d\n*入/出：%d".formatted(number, lane, direction, in_out));
                             if (in_out == 1) {
                                 int uuid = DecodeSerialPortThread.cur_batch * 1000 + number;
@@ -93,6 +99,7 @@ public class DecodeSerialPortThread implements Runnable {
                                         try {
                                             return infraredSocket.call();
                                         } catch (Exception e) {
+                                            log.error("调用红外相机出现问题！");
                                             throw new RuntimeException(e);
                                         }
                                     }, executorService);
@@ -103,14 +110,16 @@ public class DecodeSerialPortThread implements Runnable {
 
                                     ToGKJMessage toGKJMessage = new ToGKJMessage();
                                     toGKJMessage.setType(ToGKJMessageType.CAPTURE_FRAME);
-                                    toGKJMessage.setContent(cameraCaptureCommand);
+                                    toGKJMessage.setContent(objectMapper.writeValueAsString(cameraCaptureCommand));
                                     this.toGKJMessagesQueue.put(toGKJMessage);
                                 }
                             } else {
                                 log.info("*此车为反向，不做处理***");
                             }
                         } else {
-                            log.info("称重帧数据内容为：" + content);
+                            StringBuilder sb = new StringBuilder();
+                            for (byte b : content) sb.append(String.format("%02x", b));
+                            log.info("称重帧数据内容为：" + sb);
                             Integer uuid = DecodeSerialPortThread.cur_batch * 1000 + content[6];
                             Float weight = ByteBuffer.wrap(ArrayUtil.unWrap(Arrays.copyOfRange(content, 8, 12))).getFloat();
                             Float speed = ByteBuffer.wrap(ArrayUtil.unWrap(Arrays.copyOfRange(content, 12, 16))).getFloat();
@@ -120,13 +129,13 @@ public class DecodeSerialPortThread implements Runnable {
                             weightFrame.setWeight(weight);
                             weightFrame.setSpeed(speed);
                             toGKJMessage.setType(ToGKJMessageType.WEIGHT_FRAME);
-                            toGKJMessage.setContent(weightFrame);
+                            toGKJMessage.setContent(objectMapper.writeValueAsString(weightFrame));
                             toGKJMessagesQueue.put(toGKJMessage);
                             log.info("解析后的称重帧数据内容为：" + weightFrame);
                         }
                     }
                 }
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 log.error(e.getMessage());
             }
         }

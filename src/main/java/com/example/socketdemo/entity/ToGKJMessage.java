@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class ToGKJMessage {
     private ToGKJMessageType type;
-    private Object content;
+    private String content;
 }

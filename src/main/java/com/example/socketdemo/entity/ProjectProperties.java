@@ -8,13 +8,13 @@ import java.util.Map;
 
 @Slf4j
 public class ProjectProperties {
-    public static String LOCAL_LISTEN_PORT;
+    public static Integer LOCAL_LISTEN_PORT;
     public static String LOCAL_CAPTURE_ROOT_PATH;
     public static String LOCAL_CAMERA_PATH;
     public static String LOCAL_INFRARED_PATH;
 
     public static String CE_CAMERA_IP;
-    public static String CE_CAMERA_PORT;
+    public static Integer CE_CAMERA_PORT;
 
     public static String REMOTE_CAPTURE_ROOT_PATH;
     public static String REMOTE_CE_PATH;
@@ -26,9 +26,9 @@ public class ProjectProperties {
     public static String REMOTE_FTP_PATH;
 
     public static String REMOTE_IP;
-    public static String REMOTE_COMMUNICATE_PORT;
+    public static Integer REMOTE_COMMUNICATE_PORT;
     public static String REMOTE_USERNAME;
-    public static String REMOTE_PASSWORD;
+    public static Integer REMOTE_PASSWORD;
 
     static {
         Yaml yaml = new Yaml();

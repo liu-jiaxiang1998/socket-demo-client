@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -80,11 +81,18 @@ public class CameraSocket implements Runnable {
 
         @Override
         public void run() {
+            OutputStream outputStream = null;
+            try {
+                outputStream = socket.getOutputStream();
+            } catch (IOException e) {
+                log.error("侧身相机发送流异常！");
+            }
             while (socket.isConnected()) {
                 try {
                     CameraCaptureCommand captureCommand = cameraCaptureCommandQueue.take();
-                    OutputStream outputStream = socket.getOutputStream();
+                    log.info("captureCommand" + captureCommand.toString());
                     String command = CrcUtil.crcXmodem(captureCommand.getId().toString(), captureCommand.getLane().toString());
+                    log.info("command" + command);
                     byte[] commandBytes = HexUtil.hexStringToByteArray(command);
                     outputStream.write(commandBytes);
                     outputStream.flush();
@@ -110,11 +118,17 @@ public class CameraSocket implements Runnable {
 
         @Override
         public void run() {
+            InputStream inputStream = null;
+            try {
+                inputStream = socket.getInputStream();
+            } catch (IOException e) {
+                log.error("侧身相机读取流异常！");
+                return;
+            }
             while (socket.isConnected()) {
                 try {
-                    InputStream inputStream = socket.getInputStream();
                     byte[] lengthData = new byte[7];
-                    inputStream.read(lengthData);
+                    while (inputStream.read(lengthData) == -1);
                     long startTime = System.currentTimeMillis();
                     int packLength = Integer.parseInt(HexUtil.byteArrayToHexString(lengthData).substring(6, 14), 16);
                     byte[] dataBody;

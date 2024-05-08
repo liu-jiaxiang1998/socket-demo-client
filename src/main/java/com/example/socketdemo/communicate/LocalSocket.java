@@ -18,7 +18,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 和本地的python程序通信！
+ * 和本地的python程序通信！包括发送和接收！
  * date: 2024/5/6
  * author: ljx
  */
@@ -43,7 +43,6 @@ public class LocalSocket implements Runnable {
 
     @Override
     public void run() {
-
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(serverPort);
@@ -75,7 +74,6 @@ public class LocalSocket implements Runnable {
                 }
             }
         }
-
     }
 
 
@@ -128,7 +126,8 @@ public class LocalSocket implements Runnable {
             while (socket.isConnected()) {
                 try {
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-                    String receivedData = in.readLine();
+                    String receivedData;
+                    while ((receivedData = in.readLine()) == null) ;
                     Object[] arrays = objectMapper.readValue(receivedData, Object[].class);
 //                    String  pictureName = (String)arrays[arrays.length - 1];
                     String rightImgPath = (String) arrays[arrays.length - 2];

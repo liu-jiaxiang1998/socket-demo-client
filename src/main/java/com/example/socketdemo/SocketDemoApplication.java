@@ -47,7 +47,7 @@ public class SocketDemoApplication implements CommandLineRunner {
         log.info("串口通信线程已开启");
         new Thread(new DecodeSerialPortThread(serialPortDataQueue, commandQueue, toGKJMessageQueue, passingFrameMap, infraredCaptureResultMap)).start();
         log.info("解码串口数据线程已开启");
-        new Thread(new ClientSocket(ProjectProperties.REMOTE_IP, Integer.valueOf(ProjectProperties.REMOTE_COMMUNICATE_PORT), toGKJMessageQueue));
+        new Thread(new ClientSocket(ProjectProperties.REMOTE_IP, Integer.valueOf(ProjectProperties.REMOTE_COMMUNICATE_PORT), toGKJMessageQueue)).start();
         log.info("工控机通信线程已开启");
     }
 }

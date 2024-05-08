@@ -33,6 +33,7 @@ public class ClientSocket implements Runnable {
         while (true) {
             try {
                 Socket socket = new Socket(gkjIp, gkjPort);
+                log.info("和工控机成功建立连接！");
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
                 ObjectMapper objectMapper = new ObjectMapper();
                 while (socket.isConnected()) {
