@@ -61,15 +61,15 @@ public class DecodeSerialPortThread implements Runnable {
                         ObjectMapper objectMapper = new ObjectMapper();
 
                         if (commandCode == 2) {
-                            StringBuilder sb = new StringBuilder();
-                            for (byte b : content) sb.append(String.format("%02x", b));
-                            log.info("过车帧数据内容为：" + sb);
-
+//                            StringBuilder sb = new StringBuilder();
+//                            for (byte b : content) sb.append(String.format("%02x", b)).append(" ");
+//                            log.info("过车帧数据内容为：" + sb);
                             int lane = content[0] - 1;
                             int number = content[1] & 0xFF;
                             int direction = content[2] & 0xFF;
                             int in_out = content[3] & 0xFF;
-                            log.info("\n*过车序号：%d\n*车道：%d\n*方向：%d\n*入/出：%d".formatted(number, lane, direction, in_out));
+//                            log.info("\n*过车序号：%d\n*车道：%d\n*方向：%d\n*入/出：%d".formatted(number, lane, direction, in_out));
+                            log.info("过车帧！！ *过车序号：%d *车道：%d *方向：%d *入/出：%d".formatted(number, lane, direction, in_out));
                             if (in_out == 1) {
                                 int uuid = DecodeSerialPortThread.cur_batch * 1000 + number;
                                 log.info("uuid : " + uuid);
@@ -78,8 +78,8 @@ public class DecodeSerialPortThread implements Runnable {
                                 }
 
                                 if (lane == 0 || lane == 1) {
+//                                if (lane == 0 && lane == 1) { //改了这个，多测点数据！！
                                     log.info("***此车为 %d 号车道，不做处理***".formatted(lane));
-
                                 } else {
                                     log.info("***此车为正向，进行相机抓拍，图片及附属信息入队***");
                                     /** 这样设计的原因是因为传递给检测程序的参数不仅仅来自相机抓拍的结果，也包含过车帧里面的信息！其实完全可以不用的，懒得改了！ */
@@ -117,12 +117,12 @@ public class DecodeSerialPortThread implements Runnable {
                                 log.info("*此车为反向，不做处理***");
                             }
                         } else {
-                            StringBuilder sb = new StringBuilder();
-                            for (byte b : content) sb.append(String.format("%02x", b));
-                            log.info("称重帧数据内容为：" + sb);
-                            Integer uuid = DecodeSerialPortThread.cur_batch * 1000 + content[6];
-                            Float weight = ByteBuffer.wrap(ArrayUtil.unWrap(Arrays.copyOfRange(content, 8, 12))).getFloat();
-                            Float speed = ByteBuffer.wrap(ArrayUtil.unWrap(Arrays.copyOfRange(content, 12, 16))).getFloat();
+//                            StringBuilder sb = new StringBuilder();
+//                            for (byte b : content) sb.append(String.format("%02x", b)).append(" ");
+//                            log.info("称重帧数据内容为：" + sb);
+                            Integer uuid = DecodeSerialPortThread.cur_batch * 1000 + (content[6] & 0xFF);
+                            Float weight = ByteBuffer.wrap(ArrayUtil.unWrap(ArrayUtil.reverse(Arrays.copyOfRange(content, 8, 12)))).getFloat();
+                            Float speed = ByteBuffer.wrap(ArrayUtil.unWrap(ArrayUtil.reverse(Arrays.copyOfRange(content, 12, 16)))).getFloat();
                             ToGKJMessage toGKJMessage = new ToGKJMessage();
                             WeightFrame weightFrame = new WeightFrame();
                             weightFrame.setUuid(uuid);
@@ -136,7 +136,7 @@ public class DecodeSerialPortThread implements Runnable {
                     }
                 }
             } catch (Exception e) {
-                log.error(e.getMessage());
+                log.error("解码串口信息报错！", e);
             }
         }
     }

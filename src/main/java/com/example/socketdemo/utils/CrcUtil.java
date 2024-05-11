@@ -8,7 +8,7 @@ public class CrcUtil {
         int crcValue = Crc16XmodemUtil.crc16_ccitt_xmodem(bytes, 0, bytes.length);
         String crc = String.format("%04X", crcValue);
         crc = crc.substring(0, 2) + " " + crc.substring(2, 4);
-        return "02 00 33 04" + " " + xuhao + " " + chedaohao + " 01 " + crc + " 03";
+        return "02 00 33 04 " + xuhao + " " + chedaohao + " 01 " + crc + " 03";
     }
 
     public static String decimalToHexadecimal(int decimal) {

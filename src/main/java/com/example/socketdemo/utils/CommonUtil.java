@@ -55,7 +55,7 @@ public class CommonUtil {
                 break;
         }
         remoteRootPath.append(FILE_SEPARATOR);
-        String timeStr = localPath.substring(localPath.lastIndexOf(FILE_SEPARATOR), localPath.lastIndexOf("."));
+        String timeStr = localPath.substring(localPath.lastIndexOf(FILE_SEPARATOR) + 1, localPath.lastIndexOf("."));
         List<String> stringList = Arrays.stream(timeStr.split("_")).map(a -> {
             if (a.startsWith("0")) {
                 return a.substring(1, a.length());
@@ -75,5 +75,22 @@ public class CommonUtil {
         } else {
             return ProjectProperties.REMOTE_FTP_PATH + remoteFTPPath;
         }
+    }
+
+    /**
+     * 将 Int 转为两个字节的16进制字符串！
+     */
+    public static String intToHexString(int num) {
+        // 将整数按位与运算获取最低8位
+        int lowerByte = num & 0xFF;
+        // 将整数右移8位再按位与运算获取次低8位
+        int upperByte = (num >> 8) & 0xFF;
+        // 将两个字节的整数格式化为十六进制字符串
+        String hexString = String.format("%02X %02X", upperByte, lowerByte);
+        return hexString;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(intToHexString(108));
     }
 }

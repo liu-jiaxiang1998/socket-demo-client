@@ -24,7 +24,7 @@ public class FtpUtil {
             ftp.pwd();
             return true;
         } catch (Exception e) {
-            log.error("FTP未连接！");
+//            log.error("FTP未连接！");
             return false;
         }
     }
@@ -33,11 +33,13 @@ public class FtpUtil {
         File file = new File(localFilePath);
         if (file.exists()) {
             if (ftp.upload(remoteUploadPath, file)) {
-                log.info(localFilePath + " 上传成功！删除本地文件！");
+//                log.info("FTP文件上传成功！删除本地文件");
+//                log.info("远端文件地址为 " + remoteUploadPath);
+//                log.info("本地文件地址为 " + localFilePath);
                 file.delete();
             } else {
                 file.delete();
-                throw new Exception(localFilePath + " 文件上传失败！删除本地文件！");
+                throw new Exception(" FTP文件上传失败！删除本地文件 " + localFilePath);
             }
         } else {
             throw new Exception("本地文件不存在！");
